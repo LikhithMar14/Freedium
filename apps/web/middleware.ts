@@ -6,7 +6,7 @@ export default async function middleware(req: NextRequest) {
   if (!session || !session.user)
     return NextResponse.redirect(new URL("/auth/signin", req.nextUrl));
 
-  NextResponse.next();
+  return NextResponse.next();
 }
 
 export const config = {
