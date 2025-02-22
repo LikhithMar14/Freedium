@@ -1,102 +1,139 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useTransition } from "react";
+import * as React from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Icons } from "@/components/ui/icons"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { BACKEND_URL } from "@/lib/constants"
+import { useRouter } from "next/navigation";
+import { SignupFormSchema } from "@/lib/types"
+import { toast } from "sonner"
+import { signIn } from "@/actions/auth/login"
 
-import { LoginFormSchema } from "@/lib/types";
-import { signIn } from "@/actions/auth/login";
-import { toast } from "sonner";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { SubmitButton } from "../ui/SubmitButton";
 
-const SigninForm = () => {
-  const [isPending, startTransition] = useTransition();
-  
-  const form = useForm<z.infer<typeof LoginFormSchema>>({
-    resolver: zodResolver(LoginFormSchema),
+
+const SignInForm = () => {
+  const router = useRouter()
+  const [isPending, startTransition] = React.useTransition();
+
+  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+
+  const form = useForm<z.infer<typeof SignupFormSchema>>({
+    resolver: zodResolver(SignupFormSchema),
     defaultValues: {
       email: "",
       password: "",
     },
-  });
+  })
 
-  const onSubmit = (data: z.infer<typeof LoginFormSchema>) => {
+  function onSubmit(data: z.infer<typeof SignupFormSchema>) {
     startTransition(async () => {
       try {
+        console.log("SUBMITTING")
         const response = await signIn(data);
-        if(response.success){
-          toast.success(response.message,{
-            richColors: true
-          });
-        }else{
+        if (response.success) {
+          toast.success(response.message);
+          if (response.redirect) {
+            router.push(response.redirect); 
+          }
+        } else {
           toast.error(response.message);
         }
       } catch (error) {
-        toast.error("Signin failed. Please try again.");
-      } finally {
-        form.reset();
+        console.log("Error: ",error)
+        toast.error("Signup failed. Please try again.");
+      }finally{
+        form.reset()
       }
     });
-  };
+  }
 
   return (
-    <div className="max-w-md mx-auto p-10 bg-white dark:bg-gray-800 rounded-lg shadow-md ">
-      <h2 className="text-2xl font-semibold text-gray-900 dark:text-white text-center mb-4">
-        Sign In
-      </h2>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-gray-700 dark:text-white">Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    {...field}
-                    className="bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-gray-700 dark:text-white">Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Enter your password"
-                    {...field}
-                    className="bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <SubmitButton isPending={isPending} />
-        </form>
-      </Form>
-    </div>
-  );
-};
 
-export default SigninForm;
+    <Card className="w-full max-w-sm mx-auto rounded-xl shadow-lg border border-gray-200 ">
+      <CardHeader className="space-y-2 text-center">
+        <CardTitle className="text-3xl font-semibold">Welcome Back</CardTitle>
+        <CardDescription className="text-gray-500">Sign in to your account</CardDescription>
+      </CardHeader>
+
+      <CardContent className="space-y-6">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-medium">Email Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="name@example.com" {...field} className="rounded-xl" />
+                  </FormControl>
+                  <FormMessage className="text-red-500"/>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-medium">Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Enter your password" {...field} className="rounded-xl" />
+                  </FormControl>
+                  <FormMessage className="text-red-500"/>
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              className="w-full py-3 rounded-lg font-medium bg-purple-600 text-white hover:bg-purple-700 transition-all duration-300 flex items-center justify-center"
+              disabled={isLoading}
+            >
+              {isLoading && <Icons.spinner className="mr-2 h-5 w-5 animate-spin" />}
+              Sign In
+            </Button>
+          </form>
+        </Form>
+
+        <div className="relative my-4">
+          <Separator />
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3 text-gray-500 text-sm">
+            Or continue with
+          </span>
+        </div>
+        <a href={`${BACKEND_URL}/auth/google/login` }
+        >
+        <Button
+          variant="outline"
+          className="w-full py-3 mt-5 rounded-lg font-medium flex items-center justify-center hover:bg-gray-100 transition-all duration-300"
+          onClick={() => console.log("Sign in with Google")}
+        >
+          <Icons.google className="mr-2 h-5 w-5" />
+          Sign in with Google
+        </Button>
+        </a>
+      </CardContent>
+
+      <CardFooter className="flex justify-center py-4">
+        <p className="text-sm text-gray-500">
+          Don't have an account?{" "}
+          <a href="#" className="text-purple-600 font-medium hover:underline">
+            Sign up
+          </a>
+        </p>
+      </CardFooter>
+    </Card>
+
+  )
+}
+
+export default SignInForm

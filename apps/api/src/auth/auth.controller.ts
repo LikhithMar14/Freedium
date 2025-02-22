@@ -17,6 +17,7 @@ import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
 import { Response } from 'express';
 import { Public } from './decorator/public.decorator';
 import { Roles } from './decorator/roles.decorator';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -27,6 +28,7 @@ export class AuthController {
   }
   @Public()
   @UseGuards(LocalAuthGuard)
+  @SkipThrottle()
   @Post('signin')
   login(@Request() req) {
     return this.authService.login(req.user.id, req.user.name,req.user.role);

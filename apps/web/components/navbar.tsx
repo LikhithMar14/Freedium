@@ -3,13 +3,7 @@ import { useSession } from "@/hooks/SessionProvider";
 import { useIsMobile } from "@/hooks/useMobile";
 import Link from "next/link";
 import { Poppins } from "next/font/google";
-import {
-  HomeIcon,
-  Menu,
-  PartyPopper,
-  TrendingUp,
-  User,
-} from "lucide-react";
+import { HomeIcon, Menu, PartyPopper, TrendingUp, User , NotebookPen} from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -18,39 +12,43 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useState } from "react";
-import LoginButton from "./LoginButton";
+import LoginButton from "./auth/LoginButton";
 
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "700"] });const MobileNav = () => {
+const poppins = Poppins({ subsets: ["latin"], weight: ["400", "700"] });
+const MobileNav = () => {
   return (
     <Sheet>
       <SheetTrigger>
         <Menu size={30} />
       </SheetTrigger>
-      <SheetContent className="bg-white w-[60%]" side={"left"}>
+      <SheetContent className="bg-white h-full w-[65%] sm:w-[50%] flex flex-col " side={"left"}>
         <SheetHeader className="flex flex-row justify-between items-center">
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
-        <div className="w-full flex flex-col items-center mt-10 min-h-[70%] py-10">
-          <div className="flex flex-col gap-y-6 w-full text-lg">
-            {[
-              { href: "/", icon: HomeIcon, label: "Home" },
-              { href: "/posts?sort=trending", icon: TrendingUp, label: "Trending" },
-              { href: "/posts?sort=popular", icon: PartyPopper, label: "Popular" },
-              { href: "/about", icon: User, label: "About" },
-            ].map(({ href, icon: Icon, label }, index) => (
-              <Link
-                key={index}
-                href={href}
-                className="flex items-center gap-x-3 px-6 py-3 rounded-lg hover:bg-gray-100 cursor-pointer w-full font-medium"
-              >
-                <Icon className="w-6 h-6 text-gray-700" />
-                <span className="text-gray-800">{label}</span>
-              </Link>
-            ))}
-          </div>
-          <div className="mt-auto mb-4 w-full flex justify-center">
-            <LoginButton />
-          </div>
+
+        {/* Scrollable menu items */}
+        <div className="flex flex-col flex-grow mt-8 overflow-y-auto">
+          {[
+            { href: "/", icon: HomeIcon, label: "Home" },
+            { href: "/posts?sort=trending", icon: TrendingUp, label: "Trending" },
+            { href: "/posts?sort=popular", icon: PartyPopper, label: "Popular" },
+            { href: "/write", icon: NotebookPen, label: "Write" },
+            { href: "/about", icon: User, label: "About" },
+          ].map(({ href, icon: Icon, label }, index) => (
+            <Link
+              key={index}
+              href={href}
+              className="flex items-center gap-x-4 px-6 py-4 rounded-lg hover:bg-gray-100 cursor-pointer w-full font-medium"
+            >
+              <Icon className="w-6 h-6 text-gray-700" />
+              <span className="text-gray-800">{label}</span>
+            </Link>
+          ))}
+        </div>
+
+
+        <div className="py-4 border-t w-full flex justify-center ">
+          <LoginButton />
         </div>
       </SheetContent>
     </Sheet>
@@ -59,11 +57,16 @@ const poppins = Poppins({ subsets: ["latin"], weight: ["400", "700"] });const Mo
 
 const DesktopNav = () => {
   return (
-    <div className="flex items-center gap-8 xl:gap-12 font-medium">
+    <div className="flex items-center gap-6 xl:gap-12 font-medium">
       <Link href={"/"}>Home</Link>
       <Link href={"/posts?sort=trending"}>Trending</Link>
-      <Link href={"/posts?sort=popular"}>Most Popular</Link>
+      <Link href={"/posts?sort=popular"} className="whitespace-nowrap">
+        Most <span className="whitespace-nowrap">Popular</span>
+      </Link>
+
       <Link href={"/about"}>About</Link>
+
+      <LoginButton />
     </div>
   );
 };
