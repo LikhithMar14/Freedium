@@ -1,5 +1,6 @@
 "use client"
 
+import SinglePostPage from "@/components/SinglePost";
 import { useSession } from "@/hooks/SessionProvider";
 
 const HomePage = () => {
@@ -8,6 +9,7 @@ const HomePage = () => {
   return ( 
     <div>
       {JSON.stringify(session?.user.name)}
+        <SinglePostPage/>
     </div>
   );
 }

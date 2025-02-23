@@ -43,7 +43,7 @@ const CategoryBar = () => {
             Marketing
           </Link>
         </div>
-        <span className="text-xl font-medium">|</span>
+
         {/* search */}
         <Search/>
       </div>

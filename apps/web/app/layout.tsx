@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navbar";
 import Providers from "@/components/providers";
 
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -29,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable}`}
         suppressHydrationWarning={true}
       >
-        <div className="px-4 md:px-8 lg:px-16 lx:px-32 2xl:px-64">
+        <div className="px-4 md:px-8 lg:px-16 lx:px-32 2xl:px-64 min-h-screen pb-10">
           <Providers>
             <Navbar />
             {children}
