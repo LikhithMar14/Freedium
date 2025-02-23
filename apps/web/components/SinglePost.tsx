@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Search from '../components/SearchBar';
 import { Facebook, Instagram } from 'lucide-react';
+import Comment from './Comment';
+import Comments from './Comments';
 
 
 const SinglePostPage = () => {
@@ -85,7 +87,7 @@ const SinglePostPage = () => {
         {/* Sidebar */}
         <aside className="w-full lg:w-1/4 space-y-8">
           {/* Author Info */}
-          <div className="p-6 bg-gray-100 rounded-xl">
+          <div className="p-6 bg-gray-200 rounded-xl">
             <h2 className="text-lg font-semibold mb-4">Author</h2>
             <div className="flex items-center gap-4">
               <Image
@@ -104,16 +106,16 @@ const SinglePostPage = () => {
             </p>
             <div className="flex gap-3 mt-3">
               <Link href="#">
-                <Facebook/>
+                <Image src = "./facebook.svg" width={30} height={30} alt="facebook"/>
               </Link>
               <Link href="#">
-                <Instagram/>
+                <Image src = "./insta.svg" width={30} height={30} alt="instagram"/>
               </Link>
             </div>
           </div>
 
           {/* Categories */}
-          <div className="p-6 bg-gray-100 rounded-xl">
+          <div className="p-6 bg-gray-200 rounded-xl">
             <h2 className="text-lg font-semibold mb-4">Categories</h2>
             <div className="flex flex-col gap-2 text-sm">
               <Link href="#" className="text-blue-600 hover:underline">All</Link>
@@ -126,13 +128,16 @@ const SinglePostPage = () => {
           </div>
 
           {/* Search */}
-          <div className="p-6 bg-gray-100 rounded-xl">
+          <div className="p-6 bg-gray-200 rounded-xl">
             <h2 className="text-lg font-semibold mb-4">Search</h2>
             <Search />
           </div>
         </aside>
       </div>
+      <Comments/>
+
     </div>
+    
   );
 };
 

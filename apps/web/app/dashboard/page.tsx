@@ -14,6 +14,7 @@ import FeaturedPosts from "@/components/Featured-Posts";
 import Image from "@/components/Image";
 import PostItem from "@/components/PostItem";
 import PostList from "@/components/PostList";
+import CreatePost from "@/components/CreatePost";
 
 const Dashboard = () => {
   return (
@@ -143,6 +144,7 @@ const Dashboard = () => {
       </motion.div>
 
       <PostList />
+      <CreatePost/>
     </div>
   );
 };
